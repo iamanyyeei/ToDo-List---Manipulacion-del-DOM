@@ -6,6 +6,10 @@ const taskForm = document.getElementById("task-form");
 //Seleccionar el TaskList (Elemento Padre) donde se irán agregando todas las tareas
 const taskList = document.getElementById("task-list");
 
+//Llamado de la función que carga las tareas que ya estaban en el LOCALSTORAGE
+loadTasks();
+
+
 //Agregar el evento de SUBMIY
 taskForm.addEventListener("submit", (event) =>{
 
@@ -25,6 +29,9 @@ taskForm.addEventListener("submit", (event) =>{
         //Agrega con APPEND la nueva tarea después de la tarea por default
         //Para esto se llama a la función createTaskElement
         taskList.append(createTaskElement(task));
+        //Guarda la tarea en el LOCAL STORAGE
+        storeTaskInLocalStorage(task);
+        //Limpia el valor del input
         taskInput.value = "";
     }
     
@@ -80,7 +87,7 @@ taskList.addEventListener("click", (event) =>{
 
 //taskItem: el parámetro seleccionado
 
-//Función para borrar elementos
+//Función para BORRAR TAREAS
 function deleteTask(taskItem){
 
     //Valida con el usuario
@@ -90,7 +97,7 @@ function deleteTask(taskItem){
     }
 }
 
-//Función para editar elementos
+//Función para EDITAR TAREAS
 function editTask(taskItem){
 
     //Valida con el usuario
@@ -101,4 +108,28 @@ function editTask(taskItem){
         //Si es diferente a null REESCRIBE EL CONTENIDO
         taskItem.querySelector("p").firstChild.textContent = editedTask;
     }
+}
+
+//PERSISTENCIA: que se guarden los cambios aunque yo refresque la página
+
+//GUARDAR LAS TAREAS QUE SE VAN GENERANDO EN EL LOCAL STORAGE
+function storeTaskInLocalStorage (task){
+    //Ir guardando las tareas
+    //JSON.pase es un método que convierte una cadena de texto en formato JSON a un objeto o array en JavaScript
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    //Push de las tareas: push agrega un elemento a un array existente
+    tasks.push(task);
+    //Guardar como un string 
+    //JSON.stringify: convierte un objeto de Javascript a texto en formato JSON
+    localStorage.setItem("tasks",JSON.stringify(tasks));
+}
+
+//INYECTAR EL LOCALSTORAGE AL DOM cuando se refresque la página
+function loadTasks (){
+    //Obtener los elementos del localStorage
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    tasks.forEach(task => {
+        taskList.appendChild(createTaskElement(task));
+    });
 }
