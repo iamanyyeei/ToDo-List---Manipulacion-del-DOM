@@ -92,6 +92,8 @@ function deleteTask(taskItem){
 
     //Valida con el usuario
     if(confirm("¿Estás seguro de borrar esta tarea?")){
+        //Remueve las tareas del LOCAL STORAGE
+        removeFromLocalStorage(taskItem.firstChild.textContent);
         //REMUEVE EL ELEMENTOS
         taskItem.remove();
     }
@@ -107,6 +109,8 @@ function editTask(taskItem){
     if(editedTask !== null){
         //Si es diferente a null REESCRIBE EL CONTENIDO
         taskItem.querySelector("p").firstChild.textContent = editedTask;
+        //Traer el estado actual para guardarlo en LOCAL STORAGE
+        updateLocalStorage();
     }
 }
 
@@ -132,4 +136,28 @@ function loadTasks (){
     tasks.forEach(task => {
         taskList.appendChild(createTaskElement(task));
     });
+}
+
+//FUNCIONES PARA QUE AL REFRESCAR Y ELIMINAR SE GUARDEN LOS CAMBIOS EN EL LOCAL STORAGE
+
+//Guardar EDITS de tareas
+function updateLocalStorage(){
+    //Trae todos los elementos que coincidan
+    //Convierte la lista de nodos en un array que SI puedo manipular
+    const tasks = Array.from(taskList.querySelectorAll("p")).map((li) => li.firstChild.textContent);
+    
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+//Borrar tareas ELIMINADAS en el localStorage
+function removeFromLocalStorage(taskContent) {
+    //Obtiene el estado actual del LOCAL STORAGE para manipular estos elementos
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    //Nuevo ARRAY que comprueba si la tarea actual es diferente al contenido que se quiere eliminar
+    //Deja las tareas que PERSISTEN y quita a las que no
+    const updateTasks = tasks.filter((task) => task !== taskContent);
+
+    //Vuelve a convertir a JSON para que el localStorage actualice el cambio con los elementos BORRADOS
+    localStorage.setItem("tasks", JSON.stringify(updateTasks));
 }
