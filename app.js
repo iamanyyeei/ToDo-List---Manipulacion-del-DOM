@@ -144,7 +144,12 @@ function loadTasks (){
 function updateLocalStorage(){
     //Trae todos los elementos que coincidan
     //Convierte la lista de nodos en un array que SI puedo manipular
-    const tasks = Array.from(taskList.querySelectorAll("p")).map((li) => li.firstChild.textContent);
+
+    //SOLUCIÓN DE CONFLICTO: Siempre se incluye la función harcodeada en HTML, queremos que al editar o eliminar tareas no nos salga esta
+
+    //El filter evita que en el código ocurra el BUG donde se guardaba en el local storage la lista hardcodeada en html, al editar y borrar elementos ya no se guardará esta primera tarea
+    const tasks = Array.from(taskList.querySelectorAll("li")).filter((li) => li.querySelector("p").id !== "task-harcodeada").map((li) => li.querySelector("p").firstChild.textContent);
+    console.log(tasks);
     
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
