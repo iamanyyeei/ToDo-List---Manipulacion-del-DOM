@@ -126,8 +126,14 @@ button{
 
 /* Dark theme styles */
 body.dark-theme {
-    background-color: #333;
+    background: #333;
     color: #fff;
+}
+
+.dark-theme button{
+    background-color: #fad0c4;
+    background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+    color: #222;
 }
 
 .dark-theme #task-manager {

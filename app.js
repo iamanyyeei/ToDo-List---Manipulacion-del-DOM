@@ -166,3 +166,26 @@ function removeFromLocalStorage(taskContent) {
     //Vuelve a convertir a JSON para que el localStorage actualice el cambio con los elementos BORRADOS
     localStorage.setItem("tasks", JSON.stringify(updateTasks));
 }
+
+//DARK MODE - BUTTON SWITCH
+
+//Seleccionar botón switch
+const toggleButton = document.getElementById("toggle-theme-btn");
+//Seleccionar el contenedor padre del tema
+const currentTheme = localStorage.getItem("theme");
+console.log(currentTheme);
+
+toggleButton.addEventListener("click", () =>{
+    document.body.classList.toggle("dark-theme");
+
+    //Validación del tema
+    const themeToggle = document.body.classList.contains("dark-theme") ? "dark" : "Light";
+
+    //Guardar en el storage
+    localStorage.setItem("theme", themeToggle);
+
+});
+
+if(currentTheme === "dark"){
+    document.body.classList.add("dark-theme");
+} 
